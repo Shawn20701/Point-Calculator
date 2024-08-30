@@ -1,7 +1,8 @@
 import { useState } from "react";
 import './Pointcalc.css'; 
-
-export default function Pointcalc() {
+import Toggle from "./Toggle";
+// eslint-disable-next-line react/prop-types
+export default function Pointcalc({onScoreUpdate}) {
     const [isChecked, setIsChecked] = useState(false);
     const [setLinesChecked, setSetLinesChecked] = useState(false);
     const [droneChecked, setDroneChecked] = useState(false);
@@ -19,6 +20,10 @@ export default function Pointcalc() {
         return saveddata ? JSON.parse(saveddata) : 0;
     })
 
+    const handleclick = () =>{
+        localStorage.removeItem('pointsHistory');
+       onScoreUpdate();
+      }
     const handleCheck = (e) => setIsChecked(e.target.checked);
     const handleSetLineChange = (e) => setSetLinesChecked(e.target.checked);
     const handleDroneChecked = (e) => setDroneChecked(e.target.checked);
@@ -52,12 +57,25 @@ export default function Pointcalc() {
         setBoardPoints('');
         setMosaicNum('');
         setSetLineNum('');
-        localStorage.setItem('saveddata', JSON.stringify(totalPoints))
+    const newEntry = {
+        timestamp: new Date().toISOString(),
+        totalPoints
+    };
+
+    const savedHistory = localStorage.getItem('pointsHistory');
+    const history = savedHistory ? JSON.parse(savedHistory) : [];
+    history.push(newEntry);
+    localStorage.setItem('pointsHistory', JSON.stringify(history));
+
+    if (onScoreUpdate) {
+        onScoreUpdate(); 
+    }
     };
 
     return (
         <div className='form-container'>
             <h1>Calculate Your Points</h1>
+            <Toggle />
             <form onSubmit={handleSubmit} className='point-calc-form'>
                 <div className='form-group'>
                     <label htmlFor="Points-on-floor">Pixels On Floor</label>
@@ -150,8 +168,10 @@ export default function Pointcalc() {
                         </div>
                     </div>
                 )}
-
-                <button type="submit" id='submit'>Calculate Score</button>
+                <div className="button-group">
+                    <button type="submit" id='submit'>Calculate Score</button>
+                    <button id="cleardata"onClick={handleclick}>Clear All Data</button>
+                </div>
             </form>
                 <div className='result'>
                     <h2>Score Received:</h2>

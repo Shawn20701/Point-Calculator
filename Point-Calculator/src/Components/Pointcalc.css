@@ -2,10 +2,11 @@
     max-width: 600px;
     margin: auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    background-color: black;
     cursor: default;
+    margin-bottom: 0;
 }
 h1 {
     text-align: center;
@@ -70,4 +71,15 @@ button:hover {
 .result h1 {
     font-size: 2em;
     color: #007BFF;
+}
+.button-group{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+#cleardata{
+    background-color: red;
+}
+#cleardata:hover{
+    background-color: rgb(143, 13, 13);
 }
